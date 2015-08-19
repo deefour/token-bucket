@@ -61,12 +61,12 @@ class MemcachedStorage implements Storage, GlobalScope
     public function bootstrap($microtime)
     {
         if ($this->memcached->add($this->key, $microtime)) {
-            $this->mutex->notify(); // [CAS] Stop TockenBucket::bootstrap()
+            $this->mutex->notify(); // [CAS] Stop TokenBucket::bootstrap()
             return;
 
         }
         if ($this->memcached->getResultCode() === \Memcached::RES_NOTSTORED) {
-            // [CAS] repeat TockenBucket::bootstrap()
+            // [CAS] repeat TokenBucket::bootstrap()
             return;
         }
         throw new StorageException($this->memcached->getResultMessage(), $this->memcached->getResultCode());
